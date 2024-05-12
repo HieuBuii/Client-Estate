@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IApartment } from "../../types/apartment.types";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -24,9 +24,14 @@ const ApartmentCard = ({
   setOpenUpdatePost,
   refetchData,
 }: IProps) => {
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const [saved, setSaved] = useState(isSaved);
   const handleSavePost = async () => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     if (currentUser && currentUser.id === item.userId) return;
     try {
       if (!item.id) return;
@@ -81,29 +86,29 @@ const ApartmentCard = ({
               <span>{item.bathrooms} bathroom</span>
             </div>
           </div>
-          {!currentUser ||
-            (currentUser && currentUser.id !== item.userId && (
-              <div className="flex gap-5">
-                <button
-                  onClick={handleSavePost}
-                  className={`flex-center px-1 py-[2px] rounded-md cursor-pointer hover:bg-slate-300 w-7 ${
-                    saved
-                      ? "bg-primary border-0"
-                      : "bg-white border border-gray-500"
-                  }`}
-                >
-                  <i className="fa-regular fa-bookmark text-sm" />
-                </button>
-                <button
-                  onClick={() => {
-                    handleContact && handleContact(item.userId);
-                  }}
-                  className="flex-center border-[1px] border-gray-500 px-1 py-[2px] rounded-md cursor-pointer hover:bg-slate-300 w-7"
-                >
-                  <i className="fa-regular fa-message text-sm" />
-                </button>
-              </div>
-            ))}
+          {(!currentUser ||
+            (currentUser && currentUser.id !== item.userId)) && (
+            <div className="flex gap-5">
+              <button
+                onClick={handleSavePost}
+                className={`flex-center px-1 py-[2px] rounded-md cursor-pointer hover:bg-slate-300 w-7 ${
+                  saved
+                    ? "bg-primary border-0"
+                    : "bg-white border border-gray-500"
+                }`}
+              >
+                <i className="fa-regular fa-bookmark text-sm" />
+              </button>
+              <button
+                onClick={() => {
+                  handleContact && handleContact(item.userId);
+                }}
+                className="flex-center border-[1px] border-gray-500 px-1 py-[2px] rounded-md cursor-pointer hover:bg-slate-300 w-7"
+              >
+                <i className="fa-regular fa-message text-sm" />
+              </button>
+            </div>
+          )}
 
           {currentUser && currentUser.id === item.userId && (
             <div className="flex gap-5">

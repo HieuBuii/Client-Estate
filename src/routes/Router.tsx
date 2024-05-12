@@ -23,6 +23,15 @@ const Router = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           path: "/",
           element: <HomePage />,
         },
+        {
+          path: "/apartments",
+          element: <ListApartments />,
+        },
+        {
+          path: "/apartments/:id",
+          element: <Apartment />,
+          loader: loadDataPost,
+        },
       ],
     },
     isLoggedIn
@@ -30,15 +39,6 @@ const Router = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           path: "/",
           element: <MainLayout />,
           children: [
-            {
-              path: "/apartments",
-              element: <ListApartments />,
-            },
-            {
-              path: "/apartments/:id",
-              element: <Apartment />,
-              loader: loadDataPost,
-            },
             {
               path: "/profile",
               element: <Profile />,

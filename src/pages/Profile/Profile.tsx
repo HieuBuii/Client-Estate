@@ -8,7 +8,12 @@ import defaultAvatar from "/images/default-avatar.png";
 import { IUser } from "../../types/user.types";
 import CUApartment from "../../components/Modal/CUApartment";
 import ApartmentForm from "../../components/Forms/ApartmentForm";
-import { useLoaderData, Await, useSearchParams } from "react-router-dom";
+import {
+  useLoaderData,
+  Await,
+  useSearchParams,
+  useNavigate,
+} from "react-router-dom";
 import { IProfilePost } from "../../apis/user.api";
 import { Spinner } from "flowbite-react";
 import ModalConfirm from "../../components/Modal/Confirm";
@@ -25,6 +30,7 @@ interface ILoaderData {
 }
 
 function Profile() {
+  const navigate = useNavigate();
   const data = useLoaderData() as ILoaderData;
   const [searchParams, setSearchParams] = useSearchParams();
   const { currentUser } = useContext(AuthContext);
@@ -64,6 +70,10 @@ function Profile() {
   };
 
   const handleContact = async (receiverId: string) => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     try {
       const res = await createChat(receiverId);
       setDataChat(res.data);

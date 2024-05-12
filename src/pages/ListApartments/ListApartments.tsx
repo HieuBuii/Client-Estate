@@ -1,9 +1,9 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ApartmentCard from "../../components/ApartmentCard";
 import Filter from "../../components/Filter";
 import Map from "../../components/Map/Map";
 import { IApartment } from "../../types/apartment.types";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import ModalConfirm from "../../components/Modal/Confirm";
 import { deletePost, getPosts } from "../../apis/post.api";
 import { toast } from "react-toastify";
@@ -13,8 +13,11 @@ import InfiniteScroll from "../../components/InfiniteScroll";
 import { createChat } from "../../apis/chat.api";
 import { IConversation } from "../../components/Chat/Chat";
 import MessageBox from "../../components/MessageBox";
+import { AuthContext } from "../../context/AuthContext";
 
 const ListPage = () => {
+  const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedPost, setSelectedPost] = useState<IApartment | null>(null);
@@ -84,6 +87,10 @@ const ListPage = () => {
   }, []);
 
   const handleContact = async (receiverId: string) => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     try {
       const res = await createChat(receiverId);
       setSelectedChat(res.data);

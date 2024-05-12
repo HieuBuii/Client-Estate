@@ -68,15 +68,17 @@ export function DrawerMenu() {
                     >
                       Apartments
                     </Sidebar.Item>
-                    <Sidebar.Item
-                      icon={HiOutlineInformationCircle}
-                      href="/profile"
-                      onClick={(
-                        e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-                      ) => handleLinkToPage(e, "/profile")}
-                    >
-                      Profile
-                    </Sidebar.Item>
+                    {currentUser && (
+                      <Sidebar.Item
+                        icon={HiOutlineInformationCircle}
+                        href="/profile"
+                        onClick={(
+                          e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+                        ) => handleLinkToPage(e, "/profile")}
+                      >
+                        Profile
+                      </Sidebar.Item>
+                    )}
 
                     {!currentUser && (
                       <>
