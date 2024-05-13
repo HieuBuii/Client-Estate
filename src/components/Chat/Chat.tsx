@@ -146,7 +146,7 @@ function Chat({ defaultSelected }: IProps) {
     return () => {
       socket?.off("getMessage");
     };
-  }, [socket, chats, fetchNumberOfNewChat]);
+  }, [socket, chats, fetchNumberOfNewChat, selectedChat]);
 
   return (
     <div className="flex flex-col h-full mb-4 relative">
@@ -161,8 +161,8 @@ function Chat({ defaultSelected }: IProps) {
         >
           {chats.map((chat) => {
             const isNew =
-              chat.seenBy.includes(currentUser?.id || "") ||
-              chat.id === selectedChat?.id;
+              !chat.seenBy.includes(currentUser?.id || "") &&
+              chat.id !== selectedChat?.id;
             return (
               <div
                 key={chat.id}
@@ -178,13 +178,13 @@ function Chat({ defaultSelected }: IProps) {
                   <span className="font-bold">{`${chat.receiver.firstName} ${chat.receiver.lastName}`}</span>
                   <p
                     className={`text-sm text-ellipsis whitespace-nowrap overflow-hidden ${
-                      !isNew && "font-bold"
+                      isNew && "font-bold"
                     }`}
                   >
                     {chat.lastMessage}
                   </p>
                 </div>
-                {!isNew && (
+                {isNew && (
                   <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-blue-500"></div>
                 )}
                 <button
