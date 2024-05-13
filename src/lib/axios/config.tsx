@@ -17,7 +17,10 @@ class Http {
       function (error: AxiosError) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data: any | undefined = error.response?.data;
-        const message = data?.message || error.message;
+        const message =
+          data?.message || error.code === "ECONNABORTED"
+            ? "Error from server, please try again"
+            : error.message;
         if (error.response?.status === 401) {
           localStorage.setItem("user", "null");
           window.location.href = "/";
